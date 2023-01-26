@@ -1,0 +1,53 @@
+version: '3.9'
+
+services:
+
+  nginx:
+    build:
+      context: ./nginx
+      dockerfile: Dockerfile.prod
+    image: newtonasc/nginx:prod
+    container_name: nginx
+    depends_on:
+      - app
+    networks:
+      - fullcycle
+    ports: 
+      - "8080:80"
+
+  app:
+    build: 
+      context: ./node
+      dockerfile: Dockerfile.prod
+    container_name: app  
+    entrypoint: dockerize -wait tcp://db:3306 -timeout 30s docker-entrypoint.sh npm start
+    depends_on:
+      - db
+    volumes:
+      - ./node:/usr/src/app
+    #ports:
+    #  - "3000:3000" # Do not allow external access
+    tty: true
+    networks:
+      - fullcycle
+    
+  db:
+    image: mysql:8.0.26
+    container_name: db
+    volumes: 
+      - ./mysql:/var/lib/mysql
+    command: --default-authentication-plugin=mysql_native_password
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: fullcycle_db
+      MYSQL_USER: devuser
+      MYSQL_PASSWORD: devpass
+    #ports:
+    #  - "3336:3306" # Do not allow external access
+    tty: true  
+    networks: 
+      - fullcycle
+
+networks:
+    fullcycle:
+      driver: bridge
