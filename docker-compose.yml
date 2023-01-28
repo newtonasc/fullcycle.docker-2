@@ -24,9 +24,9 @@ services:
     depends_on:
       - db
     volumes:
-      - ./node:/usr/src/app
-    #ports:
-    #  - "3000:3000" # Do not allow external access
+      - app-data:/usr/src/app
+    ports:
+      - "3000:3000"
     tty: true
     networks:
       - fullcycle
@@ -42,12 +42,15 @@ services:
       MYSQL_DATABASE: fullcycle_db
       MYSQL_USER: devuser
       MYSQL_PASSWORD: devpass
-    #ports:
-    #  - "3336:3306" # Do not allow external access
+    ports:
+      - "3336:3306"
     tty: true  
     networks: 
       - fullcycle
 
+volumes:
+  app-data:
+  
 networks:
     fullcycle:
       driver: bridge
