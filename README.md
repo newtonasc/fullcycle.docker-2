@@ -1,12 +1,12 @@
 # DESAFIO DOCKER FULLCYCLE
 
-## Run docker-compose
+## Build project
+
+<code>docker-compose buid</code>
+
+## Up containers
 
 <code>docker-compose up -d</code>
-
-## If container has changed run
-
-<code>docker-compose up -d --buid</code>
 
 ## Access the container
 
